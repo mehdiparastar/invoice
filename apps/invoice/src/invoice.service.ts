@@ -14,7 +14,7 @@ export class InvoiceService {
   ) { }
 
   async create(createInvoiceDto: CreateInvoiceDto, user: UserDto) {
-    return this.paymentsClient.send('create_charge', { amount: createInvoiceDto.amount, card: createInvoiceDto.card })
+    return this.paymentsClient.send('create_charge', { amount: createInvoiceDto.amount, card: createInvoiceDto.card, email: user.email })
       .pipe(
         map((response) => {
           return this.invoiceRepository.create({

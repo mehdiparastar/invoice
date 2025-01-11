@@ -19,10 +19,6 @@ export class CreateInvoiceDto {
     @IsPositive()
     amount: number
 
-    @IsString()
-    @IsNotEmpty()
-    paymentId: string
-
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => Item)
