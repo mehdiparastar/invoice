@@ -1,33 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { InvoiceRepository } from './invoice.repository';
-import { UserDto } from '@app/common';
+import { PAYMENTS_SERVICE, UserDto } from '@app/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { map } from 'rxjs';
 
 @Injectable()
 export class InvoiceService {
-  constructor(private readonly invoiceRepository: InvoiceRepository) { }
+  constructor(
+    private readonly invoiceRepository: InvoiceRepository,
+    @Inject(PAYMENTS_SERVICE) private readonly paymentsClient: ClientProxy
+  ) { }
 
-  create(createInvoiceDto: CreateInvoiceDto, user: UserDto) {
-    return this.invoiceRepository.create({
-      ...createInvoiceDto,
-      customer: user
-    })
+  async create(createInvoiceDto: CreateInvoiceDto, user: UserDto) {
+    return this.paymentsClient.send('create_charge', { amount: createInvoiceDto.amount, card: createInvoiceDto.card })
+      .pipe(
+        map((response) => {
+          return this.invoiceRepository.create({
+            ...createInvoiceDto,
+            customer: user,
+            paymentId: response.id
+          })
+        })
+      )
   }
 
-  findAll() {
+  async findAll() {
     return this.invoiceRepository.find({})
   }
 
-  findOne(_id: string) {
+  async findOne(_id: string) {
     return this.invoiceRepository.findOne({ _id })
   }
 
-  update(_id: string, updateInvoiceDto: UpdateInvoiceDto) {
+  async update(_id: string, updateInvoiceDto: UpdateInvoiceDto) {
     return this.invoiceRepository.findOneAndUpdate({ _id }, { $set: updateInvoiceDto })
   }
 
-  remove(_id: string) {
+  async remove(_id: string) {
     return this.invoiceRepository.findOneAndDelete({ _id })
   }
 }

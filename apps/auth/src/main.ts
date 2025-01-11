@@ -11,7 +11,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   app.connectMicroservice({ transport: Transport.TCP, options: { host: '0.0.0.0', port: configService.getOrThrow<number>('TCP_PORT') } })
   app.use(cookieParser())
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   app.useLogger(app.get(Logger))
   app.startAllMicroservices()
   await app.listen(configService.getOrThrow<number>('HTTP_PORT'));

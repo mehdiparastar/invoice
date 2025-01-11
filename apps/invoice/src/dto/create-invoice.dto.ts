@@ -1,5 +1,6 @@
+import { CardDto } from "@app/common";
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsNumber, IsPositive, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsDefined, IsNotEmpty, IsNotEmptyObject, IsNumber, IsPositive, IsString, ValidateNested } from "class-validator";
 
 class Item {
     @IsString()
@@ -26,4 +27,10 @@ export class CreateInvoiceDto {
     @ValidateNested({ each: true })
     @Type(() => Item)
     items: Item[];
+
+    @IsDefined()
+    @ValidateNested()
+    @IsNotEmptyObject()
+    @Type(() => CardDto)
+    card: CardDto
 }
