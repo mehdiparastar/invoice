@@ -1,6 +1,5 @@
-import { AbstractDocument } from "@app/common";
+import { AbstractDocument, UserDocument } from "@app/common";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { UserDocument } from "apps/auth/src/users/models/user.schema";
 import { SchemaTypes } from "mongoose";
 
 @Schema()
