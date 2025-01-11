@@ -10,7 +10,7 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-COPY apps/invoice apps/invoice
+COPY apps/payments apps/payments
 COPY libs libs
 
 RUN pnpm run build
@@ -33,4 +33,4 @@ RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD [ "node", "dist/apps/payments/main" ]
+CMD [ "node", "dist/apps/payments/src/main" ]

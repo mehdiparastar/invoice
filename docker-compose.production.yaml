@@ -1,0 +1,53 @@
+services:
+  invoice:
+    build:
+      context: .
+      dockerfile: ./apps/invoice/Dockerfile
+      target: production
+    env_file:
+      - ./apps/invoice/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - invoice_volume:/usr/src/app
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: production
+    env_file:
+      - ./apps/auth/.env
+    ports:
+      - "3001:3001"
+    volumes:
+      - auth_volume:/usr/src/app
+
+  payments:
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: production
+    env_file:
+      - ./apps/payments/.env
+    volumes:
+      - payments_volume:/usr/src/app
+
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: production
+    env_file:
+      - ./apps/notifications/.env
+    volumes:
+      - notifications_volume:/usr/src/app
+
+  mongo:
+    image: mongo
+
+volumes:
+  invoice_volume:
+  auth_volume:
+  payments_volume:
+  notifications_volume:

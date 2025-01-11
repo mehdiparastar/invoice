@@ -33,4 +33,4 @@ RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD [ "node", "dist/apps/invoice/main" ]
+CMD [ "node", "dist/apps/invoice/src/main" ]
