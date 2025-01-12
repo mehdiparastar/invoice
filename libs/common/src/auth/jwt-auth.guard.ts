@@ -22,7 +22,7 @@ export class JwtAuthGuard implements CanActivate {
         }
 
         const roles = this.reflector.get<string[]>('roles', context.getHandler())
-        console.debug("mehdi parastar \n\n\n\n", roles)
+
         return this.authClient.send<UserDto>('authenticate', { Authentication: jwt }).pipe(
             tap(res => {
                 if (!roles.some(role => (res.roles || []).includes(role))) {
