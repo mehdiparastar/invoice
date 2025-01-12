@@ -1,4 +1,4 @@
-import { AUTH_SERVICE, DatabaseModule, LoggerModule, PAYMENTS_SERVICE } from '@app/common';
+import { AUTH_SERVICE, DatabaseModule, HealthModule, LoggerModule, PAYMENTS_SERVICE } from '@app/common';
 import { Module } from '@nestjs/common';
 import { InvoiceController } from './invoice.controller';
 import { InvoiceRepository } from './invoice.repository';
@@ -49,7 +49,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         }),
         inject: [ConfigService]
       }
-    ])
+    ]),
+    HealthModule
   ],
   controllers: [InvoiceController],
   providers: [InvoiceService, InvoiceRepository],
