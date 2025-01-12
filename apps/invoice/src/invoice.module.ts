@@ -15,10 +15,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       validationSchema: Joi.object({
         MONGO_URI: Joi.string().required(),
         PORT: Joi.number().required(),
-        AUTH_HOST: Joi.string().required(),
-        AUTH_PORT: Joi.number().required(),
-        PAYMENTS_HOST: Joi.string().required(),
-        PAYMENTS_PORT: Joi.number().required(),
+        RABBITMQ_URI: Joi.string().required(),
       })
     }),
     DatabaseModule,
@@ -29,11 +26,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: AUTH_SERVICE,
         useFactory: (configService: ConfigService) => ({
           name: AUTH_SERVICE,
-          transport: Transport.TCP,
-          options: {
-            host: configService.getOrThrow<string>('AUTH_HOST'),
-            port: configService.getOrThrow<number>('AUTH_PORT')
-          }
+          transport: Transport.RMQ,
+          options: { urls: [configService.getOrThrow<string>('RABBITMQ_URI')], queue: 'auth' }
         }),
         inject: [ConfigService]
       },
@@ -41,11 +35,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: PAYMENTS_SERVICE,
         useFactory: (configService: ConfigService) => ({
           name: PAYMENTS_SERVICE,
-          transport: Transport.TCP,
-          options: {
-            host: configService.getOrThrow<string>('PAYMENTS_HOST'),
-            port: configService.getOrThrow<number>('PAYMENTS_PORT')
-          }
+          transport: Transport.RMQ,
+          options: { urls: [configService.getOrThrow<string>('RABBITMQ_URI')], queue: 'payments' }
         }),
         inject: [ConfigService]
       }

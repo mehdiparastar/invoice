@@ -9,11 +9,8 @@ async function bootstrap() {
   const app = await NestFactory.create(NotificationsModule);
   const configService = app.get(ConfigService)
   app.connectMicroservice({
-    transport: Transport.TCP,
-    options: {
-      host: '0.0.0.0',
-      port: configService.getOrThrow<number>('PORT')
-    }
+    transport: Transport.RMQ,
+    options: { urls: [configService.getOrThrow<string>('RABBITMQ_URI')], noAck: false, queue: 'notifications' }
   })
   app.useLogger(app.get(Logger))
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))

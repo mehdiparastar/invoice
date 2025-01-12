@@ -11,10 +11,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        PORT: Joi.number().required(),
+        RABBITMQ_URI: Joi.string().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
-        NOTIFICATIONS_HOST: Joi.string().required(),
-        NOTIFICATIONS_PORT: Joi.number().required(),
       })
     }),
     LoggerModule,
@@ -23,11 +21,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: NOTIFICATIONS_SERVICE,
         useFactory: (configService: ConfigService) => ({
           name: NOTIFICATIONS_SERVICE,
-          transport: Transport.TCP,
-          options: {
-            host: configService.getOrThrow<string>('NOTIFICATIONS_HOST'),
-            port: configService.getOrThrow<number>('NOTIFICATIONS_PORT')
-          }
+          transport: Transport.RMQ,
+          options: { urls: [configService.getOrThrow<string>('RABBITMQ_URI')], queue: 'notifications' }
         }),
         inject: [ConfigService]
       }

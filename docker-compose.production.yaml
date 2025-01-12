@@ -46,6 +46,11 @@ services:
   mongo:
     image: mongo
 
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+      
 volumes:
   invoice_volume:
   auth_volume:
