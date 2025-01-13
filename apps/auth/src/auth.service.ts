@@ -20,5 +20,7 @@ export class AuthService {
     expires.setSeconds(expires.getSeconds() + this.configService.getOrThrow<number>('JWT_EXPIRATION'))
 
     response.cookie('Authentication', token, { httpOnly: true, expires })
+
+    return token
   }
 }

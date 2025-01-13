@@ -1,0 +1,49 @@
+services:
+  e2e:
+    build: 
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./specs:/usr/src/app/specs
+    depends_on:
+      - invoice
+      - auth
+      - payments
+      - notifications
+      - mongo
+      - rabbitmq
+
+  invoice:
+    image: invoice-invoice
+    command: node dist/apps/invoice/main
+    env_file:
+      - ../apps/invoice/.env
+    ports:
+      - "3000:3000"
+
+  auth:
+    image: invoice-auth
+    command: node dist/apps/auth/main
+    env_file:
+      - ../apps/auth/.env
+    ports:
+      - "3001:3001"
+
+  payments:
+    image: invoice-payments
+    command: node dist/apps/payments/main
+    env_file:
+      - ../apps/payments/.env
+
+  notifications:
+    image: invoice-notifications
+    command: node dist/apps/notifications/main
+    env_file:
+      - ../apps/notifications/.env
+
+  mongo:
+    image: mongo
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
