@@ -1,4 +1,7 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import * as nodemailer from 'nodemailer'
+
+type EmailHtml = Pick<nodemailer.SendMailOptions, 'html'>['html'];
 
 export class NotifyEmailDto {
     @IsEmail()
@@ -11,4 +14,7 @@ export class NotifyEmailDto {
 
     @IsString()
     text: string
+
+    @IsOptional()
+    html?: EmailHtml
 }

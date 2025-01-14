@@ -1,8 +1,9 @@
-import { AbstractDocument, UserDocument } from "@app/common";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { SchemaTypes } from "mongoose";
+import { AbstractDocument } from "../database";
+import { UserDocument } from "./user.schema";
 
-@Schema()
+@Schema({ versionKey: false, timestamps: true })
 export class InvoiceDocument extends AbstractDocument {
     @Prop({ required: true })
     amount: number

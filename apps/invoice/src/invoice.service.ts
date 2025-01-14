@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
-import { InvoiceRepository } from './invoice.repository';
-import { PAYMENTS_SERVICE, UserDto } from '@app/common';
+import { InvoiceRepository, PAYMENTS_SERVICE, UserDto, } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { map } from 'rxjs';
 

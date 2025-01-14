@@ -18,12 +18,13 @@ export class NotificationsService {
         }
     })
 
-    async notifyEmail({ email, subject, text }: NotifyEmailDto) {
+    async notifyEmail({ email, subject, text, html }: NotifyEmailDto) {
         await this.transporter.sendMail({
             from: this.configService.getOrThrow<string>('SMTP_USER'),
             to: email,
             subject: subject || 'Payment Notification From Invoice APP',
-            text: text || 'Payment Notification From Invoice APP'
+            text: text || 'Payment Notification From Invoice APP',
+            html: html || undefined
         })
     }
 }

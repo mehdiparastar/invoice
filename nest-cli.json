@@ -52,6 +52,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
+    },
+    "cron": {
+      "type": "application",
+      "root": "apps/cron",
+      "entryFile": "main",
+      "sourceRoot": "apps/cron/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cron/tsconfig.app.json"
+      }
     }
   },
   "monorepo": true,

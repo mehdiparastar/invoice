@@ -5,4 +5,6 @@ export class UserDto {
     email: string
     password: string
     roles: string[]
+    createdAt: Date; 
+    updatedAt: Date;
 }

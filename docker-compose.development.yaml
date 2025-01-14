@@ -53,10 +53,31 @@ services:
     volumes:
       - .:/usr/src/app
 
+  cron:
+    build:
+      context: .
+      dockerfile: ./apps/cron/Dockerfile
+      target: development
+    command: pnpm run start:debug cron
+    env_file:
+      - ./apps/cron/.env
+    ports:
+      - "5229:9229"
+    volumes:
+      - .:/usr/src/app
+
   mongo:
     image: mongo
+    restart: always
+    ports:
+      - '27037:27017'
+    volumes:
+      - mongo-development-data:/data/db
 
   rabbitmq:
     image: rabbitmq
     ports:
-      - '5672:5672'
+      - '3672:5672'
+
+volumes:
+  mongo-development-data:

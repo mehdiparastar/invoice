@@ -1,9 +1,7 @@
-import { AUTH_SERVICE, DatabaseModule, HealthModule, LoggerModule, PAYMENTS_SERVICE } from '@app/common';
+import { AUTH_SERVICE, DatabaseModule, HealthModule, InvoiceDocument, InvoiceRepository, InvoiceSchema, LoggerModule, PAYMENTS_SERVICE } from '@app/common';
 import { Module } from '@nestjs/common';
 import { InvoiceController } from './invoice.controller';
-import { InvoiceRepository } from './invoice.repository';
 import { InvoiceService } from './invoice.service';
-import { InvoiceDocument, InvoiceSchema } from './models/invoice.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';

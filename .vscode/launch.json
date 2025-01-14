@@ -47,6 +47,17 @@
             "restart": true,
             "localRoot": "${workspaceFolder}",
             "remoteRoot": "/usr/src/app"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Debug cron service",
+            "address": "localhost",
+            "port": 5229,
+            "sourceMaps": true,
+            "restart": true,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/usr/src/app"
         }
     ]
 }

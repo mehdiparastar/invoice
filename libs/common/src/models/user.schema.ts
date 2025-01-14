@@ -1,8 +1,8 @@
-import { AbstractDocument } from "@app/common";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { SchemaTypes, Types } from "mongoose";
+import { AbstractDocument } from "../database";
 
-@Schema()
+@Schema({ versionKey: false, timestamps: true })
 export class UserDocument extends AbstractDocument {
     @Prop({ required: true, type: SchemaTypes.String, index: true, unique: true })
     email: string

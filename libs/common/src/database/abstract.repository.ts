@@ -1,6 +1,6 @@
 import { Logger, NotFoundException } from "@nestjs/common";
 import { AbstractDocument } from "./abstract.schema";
-import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
+import { FilterQuery, Model, PipelineStage, Types, UpdateQuery } from "mongoose";
 
 export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     protected abstract readonly logger: Logger;
@@ -44,5 +44,15 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
 
     async findOneAndDelete(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
         return await this.model.findOneAndDelete(filterQuery).lean<TDocument>(true)
+    }
+
+    async aggregate(pipeline: PipelineStage[]): Promise<any[]> {
+        try {
+            const results = await this.model.aggregate(pipeline).exec();
+            return results;
+        } catch (error) {
+            this.logger.error('Error executing aggregation pipeline', { pipeline, error });
+            throw error;
+        }
     }
 }
