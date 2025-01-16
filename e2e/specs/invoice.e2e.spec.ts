@@ -1,60 +1,73 @@
+import { invoices } from "./invoices";
+import { truncateTestDB } from "./truncateTestDB";
+import { adminUser } from "./users";
+
 describe("Invoice", () => {
     let jwt: string
 
     beforeAll(async () => {
-        const user = {
-            email: "invoice.project.2025@gmail.com",
-            password: "Password123!",
-            // roles: ["Admin"]
-        }
+        await truncateTestDB()
 
-        await fetch('http://auth:3001/users', {
-            method: 'POST',
-            body: JSON.stringify(user),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-
-        const response = await fetch("http://auth:3001/auth/login", {
+        // Create the admin user
+        const createUserResponse = await fetch("http://auth:3001/users", {
             method: "POST",
-            body: JSON.stringify(user),
+            body: JSON.stringify(adminUser),
             headers: {
-                "Content-Type": "application/json"
-            }
-        })
+                "Content-Type": "application/json",
+            },
+        });
 
-        jwt = await response.text()
+        // Authenticate the admin user
+        const loginResponse = await fetch("http://auth:3001/auth/login", {
+            method: "POST",
+            body: JSON.stringify(adminUser),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        jwt = await loginResponse.text();
     })
 
-    test("Create Invoice", async () => {
-
-        const createInvoice = await fetch('http://invoice:3000/invoice', {
+    test("CRUD Invoice", async () => {
+        // create invoice section
+        const createInvoice1 = await fetch('http://invoice:3000/invoice', {
             method: "POST",
-            body: JSON.stringify({
-                "amount": 140,
-                "items": [{
-                    "sku": "icecream",
-                    "qt": 14
-                }],
-                "card": {
-                    "cvc": "413",
-                    "exp_month": "12",
-                    "exp_year": "34",
-                    "number": "4242 4242 4242 4242"
-                }
-            }),
+            body: JSON.stringify(invoices[0]),
             headers: {
                 "Content-Type": "application/json",
                 "authentication": jwt
             }
         })
-        
-        expect(createInvoice.ok).toBeTruthy()
+        const createInvoice2 = await fetch('http://invoice:3000/invoice', {
+            method: "POST",
+            body: JSON.stringify(invoices[1]),
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": jwt
+            }
+        })
+        const createInvoice3 = await fetch('http://invoice:3000/invoice', {
+            method: "POST",
+            body: JSON.stringify(invoices[2]),
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": jwt
+            }
+        })
 
-        const createdInvoice = await createInvoice.json()
+        expect(createInvoice1.ok).toBeTruthy()
+        const createdInvoice1 = await createInvoice1.json()
 
-        const findInvoice = await fetch(`http://invoice:3000/invoice/${createdInvoice._id}`, {
+        expect(createInvoice2.ok).toBeTruthy()
+        const createdInvoice2 = await createInvoice2.json()
+
+        expect(createInvoice3.ok).toBeTruthy()
+        const createdInvoice3 = await createInvoice3.json()
+
+
+        // find invoice1 section
+        const findInvoice = await fetch(`http://invoice:3000/invoice/${createdInvoice1._id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -63,6 +76,45 @@ describe("Invoice", () => {
         })
 
         const findedInvoice = await findInvoice.json()
-        expect(findedInvoice).toEqual(createdInvoice)
+        expect(findedInvoice).toEqual(createdInvoice1)
+
+
+        //find all invoices
+        const findAllInvoices = await fetch(`http://invoice:3000/invoice`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": jwt
+            }
+        })
+
+        const findedAllInvoices = await findAllInvoices.json()
+        expect(findedAllInvoices.map((item: any) => item._id).sort((a: any, b: any) => a - b)).toEqual(([createdInvoice1, createdInvoice2, createdInvoice3]).map((item: any) => item._id).sort((a: any, b: any) => a - b))
+
+
+        // Update invoice1
+        const updateInvoice1 = await fetch(`http://invoice:3000/invoice/${createdInvoice1._id}`, {
+            method: "PATCH",
+            body: JSON.stringify({ amount: 400 }),
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": jwt
+            }
+        })
+        expect(updateInvoice1.ok).toBeTruthy()
+        const updatedInvoice1 = await updateInvoice1.json()
+        expect(updatedInvoice1.amount).toEqual(400)
+
+        // Delete invoice1
+        const DeleteInvoices1 = await fetch(`http://invoice:3000/invoice/${createdInvoice1._id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": jwt
+            }
+        })
+        expect(DeleteInvoices1.ok).toBeTruthy()
+        const DeletedInvoices1 = await DeleteInvoices1.json()
+        expect(DeletedInvoices1._id).toEqual(createdInvoice1._id)
     })
 })

@@ -77,3 +77,4 @@ volumes:
   payments_volume:
   notifications_volume:
   mongo-production-data:
+  cron_volume:

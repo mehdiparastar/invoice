@@ -10,6 +10,7 @@ services:
       - payments
       - notifications
       - mongo
+      - cron
       - rabbitmq
 
   invoice:
@@ -40,8 +41,16 @@ services:
     env_file:
       - ../apps/notifications/.env
 
+  cron:
+    image: invoice-cron
+    command: node dist/apps/cron/main
+    env_file:
+      - ../apps/cron/.env
+
   mongo:
     image: mongo
+    ports:
+      - '27087:27017'
 
   rabbitmq:
     image: rabbitmq

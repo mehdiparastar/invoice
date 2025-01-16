@@ -1,3 +1,5 @@
 module.exports = {
-    preset: 'ts-jest'
+    globalSetup: './jest.startGuard.ts',
+    preset: 'ts-jest',
+    maxWorkers: 1
 }

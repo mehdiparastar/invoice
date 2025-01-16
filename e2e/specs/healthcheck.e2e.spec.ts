@@ -28,4 +28,13 @@ describe("Health", () => {
             done()
         })
     })
+
+    test("Cron", (done) => {
+        ping({ address: 'cron' }, err => {
+            if (err) {
+                fail()
+            }
+            done()
+        })
+    })
 })
